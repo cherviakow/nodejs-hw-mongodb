@@ -8,7 +8,7 @@ setupServer.get('/', (req, res) =>{
 });
 
 setupServer.listen(PORT, () =>{
-    `Server is running on port {PORT}`;
+    `Server  running on port {PORT}`;
 
 });
 
