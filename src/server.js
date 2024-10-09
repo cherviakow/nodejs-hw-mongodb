@@ -3,10 +3,18 @@ import { Contact } from "./models/contact.js";
 import cors from 'cors';
 import pino from 'pino-http';
 
+import { env } from './utils/.env.js';
+import dotenv from "dotenv";
+dotenv.config();
+
+
+
 export async function setupServer() {
 
     const app = express();
-    const PORT = 3000;
+    // const PORT = 3000;
+    const PORT = Number(env('PORT', '3000'));
+    app.use(express.json());
 
     app.use(cors());
     app.use(pino({transport: {target: 'pino-pretty'}}));
