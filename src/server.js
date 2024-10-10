@@ -1,10 +1,9 @@
 import express from "express";
-import { Contact } from "./models/contact.js";
 import cors from 'cors';
 import pino from 'pino-http';
-
 import { env } from './utils/.env.js';
 import dotenv from "dotenv";
+import { getAllContacts, getContactById } from "./serviceContacts/contacts.js";
 dotenv.config();
 
 
@@ -12,7 +11,6 @@ dotenv.config();
 export async function setupServer() {
 
     const app = express();
-    // const PORT = 3000;
     const PORT = Number(env('PORT', '3000'));
     app.use(express.json());
 
@@ -22,7 +20,7 @@ export async function setupServer() {
 app.get('/contacts', async (req, res) => {
 
     try{
-       const contacts = await Contact.find();
+       const contacts = await getAllContacts();
        res.status(200).json({
         status: 200,
         message: 'Found all contacts',
@@ -37,9 +35,9 @@ app.get('/contacts/:contactId', async (req, res) => {
     const {contactId} = req.params;
 
     try{
-        const contactsId = await Contact.findById(contactId);
-        if (contactId === null) {
-            return res.status(404).send('Contact not found');
+        const contactsId = await getContactById(contactId);
+        if (!contactId) {
+            return res.status(404).json('Contact not found');
         }
         res.status(200).json({
             status: 200,
@@ -47,8 +45,10 @@ app.get('/contacts/:contactId', async (req, res) => {
             data: contactsId,
     });
     } catch(error) {
-        console.error(error);
-        res.status(500).send('Server error');
+        res.status(500).json({
+            message:'Server error',
+        error: error.message,
+    });
     }
 
 });
@@ -57,9 +57,9 @@ app.listen(PORT, () =>{
     console.log(`Server is running on port ${PORT}`);
 });
 
-app.use((req, res) => {
+app.use((req, res, next) => {
     res.status(404).json({
-        message: 'Not found'
+        message: 'Not found!'
     });
 });
 };
