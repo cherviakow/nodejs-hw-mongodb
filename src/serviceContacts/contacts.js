@@ -16,6 +16,10 @@ export function deleteContact(id) {
   return Contact.findByIdAndDelete(id);
 };
 
+export function updateContact(contactId, contact){
+  return Contact.findByIdAndUpdate(contactId, contact);
+}
+
 export function changeContactType(contactId, newContact) {
   return Contact.findByIdAndUpdate(contactId, newContact, { new: true });
 };

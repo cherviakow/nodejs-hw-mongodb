@@ -3,6 +3,7 @@ import {
   getContactById,
   createContact,
   deleteContact,
+  updateContact,
   changeContactType,
 } from '../serviceContacts/contacts.js';
 import httpErrors from 'http-errors';
@@ -51,8 +52,8 @@ export async function createContactController(req, res) {
 }
 
 export async function deleteContactController(req, res) {
-  const { id } = req.params;
-  const result = await deleteContact(id);
+  const { contactId } = req.params;
+  const result = await deleteContact(contactId);
 
   if (!result) {
     console.log('Contact not found');
@@ -62,6 +63,26 @@ res.status(204).json({
     status: 204,
     message: `Contact deleted successfully`,
   });
+};
+
+export async function updateContactController(req, res){
+
+  const {contactId} = req.params;
+  const contact = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    isFavourite: req.body.isFavourite,
+    contactType: req.body.contactType,
+  };
+
+  const result = await updateContact(contactId, contact);
+
+  console.log({result});
+
+  res.send('UPDATE USER');
+
+
 };
 
 export async function changeContactTypeController(req, res){

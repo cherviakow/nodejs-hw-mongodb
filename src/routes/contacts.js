@@ -7,6 +7,7 @@ import {
   createContactController,
   deleteContactController,
   changeContactTypeController,
+  updateContactController,
 } from '../controllers/contacts.js';
 
 const jsonParser = express.json();
@@ -18,8 +19,11 @@ router.get('/contacts/:contactId', ctrlWrapper(getContactController));
 
 router.post('/contacts', jsonParser, ctrlWrapper(createContactController));
 
-router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
+router.put('/contacts/:contactId', jsonParser, ctrlWrapper(updateContactController));
 
 router.patch('/contacts/:contactId', jsonParser, ctrlWrapper(changeContactTypeController));
+
+router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
+
 
 export default router;
