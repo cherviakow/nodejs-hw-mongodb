@@ -14,7 +14,10 @@ export async function getContactsController(req, res) {
     message: 'Found all contacts',
     data: contacts,
   });
+<<<<<<< HEAD
 }
+=======
+>>>>>>> hw3-crud
 
 export async function getContactController(req, res, next) {
   const { contactId } = req.params;
