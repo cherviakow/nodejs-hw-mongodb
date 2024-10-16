@@ -24,7 +24,7 @@ export async function setupServer() {
       });
     } catch (error) {
       res.status(500).send(error);
-    }
+    };
   });
 
   app.get('/contacts/:contactId', async (req, res) => {
