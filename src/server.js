@@ -4,6 +4,7 @@ import pino from 'pino-http';
 import { env } from './utils/.env.js';
 import dotenv from 'dotenv';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { getAllContacts, getContactById } from './serviceContacts/contacts.js';
 
 
 dotenv.config();
