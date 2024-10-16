@@ -16,6 +16,7 @@ export async function getContactsController(req, res) {
   });
 };
 
+
 export async function getContactController(req, res, next) {
   const { contactId } = req.params;
 
