@@ -15,8 +15,7 @@ export async function getContactsController(req, res) {
     message: 'Found all contacts',
     data: contacts,
   });
-};
-
+}
 
 export async function getContactController(req, res, next) {
   const { contactId } = req.params;
@@ -24,7 +23,7 @@ export async function getContactController(req, res, next) {
   const contact = await getContactById(contactId);
   if (!contact) {
     console.log('Contact not found');
-    throw httpErrors(404, 'Contact not found!');
+    throw httpErrors(404, 'Contact not found');
   }
   res.status(200).json({
     status: 200,
@@ -58,16 +57,15 @@ export async function deleteContactController(req, res) {
   if (!result) {
     console.log('Contact not found');
     throw httpErrors(404, 'Contact not found!');
-}
-res.status(204).json({
+  }
+  res.status(204).json({
     status: 204,
     message: `Contact deleted successfully`,
   });
-};
+}
 
-export async function updateContactController(req, res){
-
-  const {contactId} = req.params;
+export async function updateContactController(req, res) {
+  const { contactId } = req.params;
   const contact = {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
@@ -78,16 +76,19 @@ export async function updateContactController(req, res){
 
   const result = await updateContact(contactId, contact);
 
-  console.log({result});
+  if (!result) {
+    throw httpErrors(404, 'Contact not found');
+  }
 
-  res.send('UPDATE USER');
+  res.status(200).json({
+    status: 200,
+    message: `Successfully updated a contact!`,
+    data: result,
+  });
+}
 
-
-};
-
-export async function changeContactTypeController(req, res){
-
-    const { contactId } = req.params;
+export async function changeContactTypeController(req, res) {
+  const { contactId } = req.params;
 
   const result = await changeContactType(contactId, req.body);
 
@@ -100,4 +101,4 @@ export async function changeContactTypeController(req, res){
     message: `Successfully patched a contact!`,
     data: result,
   });
-};
+}
