@@ -25,7 +25,7 @@ router.post('/contacts', jsonParser, validateBody(contactShema), ctrlWrapper(cre
 
 router.put('/contacts/:id', isValidID, jsonParser, ctrlWrapper(updateContactController));
 
-router.patch('/contacts/:id', isValidID, jsonParser, ctrlWrapper(changeContactTypeController));
+router.patch('/contacts/:id', isValidID, jsonParser, validateBody(contactShema), ctrlWrapper(changeContactTypeController));
 
 router.delete('/contacts/:id', isValidID, ctrlWrapper(deleteContactController));
 
