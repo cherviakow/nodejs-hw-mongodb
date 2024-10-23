@@ -5,7 +5,7 @@ export const contactShema = Joi.object({
     'any.required': 'Contact name is required',
   }),
   phoneNumber: Joi.number().required(),
-  email: Joi.string().min(3).max(20).required(),
-  isFavourite: Joi.boolean().required(),
+  email: Joi.string().min(3).max(20),
+  isFavourite: Joi.boolean(),
   contactType: Joi.string().min(3).max(20).required(),
 });

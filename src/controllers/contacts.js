@@ -21,11 +21,15 @@ export async function getContactsController(req, res) {
     sortOrder,
   });
 
-  res.status(200).json({
-    status: 200,
-    message: 'Found all contacts',
+  res.json({
     data: data,
   });
+
+  // res.status(200).json({
+  //   status: 200,
+  //   message: 'Found all contacts',
+  //   data: data,
+  // });
 }
 
 export async function getContactController(req, res, next) {
