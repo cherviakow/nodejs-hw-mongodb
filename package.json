@@ -26,5 +26,11 @@
     "mongoose": "^8.7.0",
     "pino-http": "^10.3.0"
   },
+
+  "engines": {
+  "node": ">=18.18.0 <20.8.0"
+},
   "description": ""
+
+
 }
