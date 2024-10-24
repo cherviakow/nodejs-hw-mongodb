@@ -21,9 +21,9 @@ export async function getContactsController(req, res) {
     sortOrder,
   });
 
-  res.json({
-    data: data,
-  });
+  res.json(
+    data,
+  );
 
   // res.status(200).json({
   //   status: 200,
