@@ -1,6 +1,5 @@
 import express from 'express';
 import {ctrlWrapper} from '../utils/ctrlWrapper.js';
-const router = express.Router();
 import {
   getContactController,
   getContactsController,
@@ -12,8 +11,9 @@ import {
 import { isValidID } from '../middlewares/isValidID.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import { contactShema } from '../validation/contact.js';
+import { patchContactShema } from '../validation/contact.js';
 
-
+const router = express.Router();
 const jsonParser = express.json();
 
 
@@ -25,7 +25,7 @@ router.post('/contacts', jsonParser, validateBody(contactShema), ctrlWrapper(cre
 
 router.put('/contacts/:id', isValidID, jsonParser, ctrlWrapper(updateContactController));
 
-router.patch('/contacts/:id', isValidID, jsonParser, validateBody(contactShema), ctrlWrapper(changeContactTypeController));
+router.patch('/contacts/:id', isValidID, jsonParser, validateBody(patchContactShema), ctrlWrapper(changeContactTypeController));
 
 router.delete('/contacts/:id', isValidID, ctrlWrapper(deleteContactController));
 

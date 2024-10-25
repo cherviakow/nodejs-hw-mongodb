@@ -111,9 +111,13 @@ export async function changeContactTypeController(req, res) {
     throw httpErrors(404, 'Contact not found');
   }
 
-  res.status(200).json({
-    status: 200,
-    message: `Successfully patched a contact!`,
-    data: result,
-  });
+  res.json(
+    result,
+  );
+
+  // res.status(200).json({
+  //   status: 200,
+  //   message: `Successfully patched a contact!`,
+  //   data: result,
+  // });
 }
