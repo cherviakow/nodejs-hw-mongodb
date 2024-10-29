@@ -6,4 +6,4 @@ export function ctrlWrapper(controller) {
         next(error);
     }
   };
-}
+};
