@@ -1,7 +1,16 @@
 import { Contact } from '../models/contact.js';
 
-export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
+export const getAllContacts = async ({
+  page,
+  perPage,
+  sortBy,
+  sortOrder,
+  userId,
+}) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
+
+  const contactQuery = Contact.find();
+  contactQuery.where('userId').equals(userId);
 
   const [total, data] = await Promise.all([
     Contact.countDocuments(),
@@ -24,22 +33,22 @@ export const getAllContacts = async ({ page, perPage, sortBy, sortOrder }) => {
   };
 };
 
-export const getContactById = async (id) => {
-  return await Contact.findById(id);
+export const getContactById = async (id, userId) => {
+  return await Contact.findById({_id: id, userId});
 };
 
-export function createContact(contact) {
-  return Contact.create(contact);
+export function createContact(contact, userId) {
+  return Contact.create({_id: contact, userId});
 }
 
-export function deleteContact(id) {
-  return Contact.findByIdAndDelete(id);
+export function deleteContact(id, userId) {
+  return Contact.findByIdAndDelete(id, userId);
 }
 
-export function updateContact(id, contact) {
-  return Contact.findByIdAndUpdate(id, contact);
+export function updateContact(id, contact, userId) {
+  return Contact.findByIdAndUpdate(id, contact, userId);
 }
 
-export function changeContactType(id, newContact) {
-  return Contact.findByIdAndUpdate(id, newContact, { new: true });
+export function changeContactType(id, newContact, userId) {
+  return Contact.findByIdAndUpdate(id, newContact, userId, { new: true });
 }

@@ -8,6 +8,7 @@ import { env } from './utils/.env.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
+
 import authRoutes from './routes/auth.js';
 
 dotenv.config();

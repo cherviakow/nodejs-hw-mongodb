@@ -49,7 +49,7 @@ export function logoutUser(sessionId) {
 }
 
 export async function refreshSession(sessionId, refreshToken) {
-  const session = Session.findById(sessionId);
+  const session = await Session.findById(sessionId);
 
   if (session === null) {
     throw httpError(401, 'Session not found');
@@ -63,8 +63,7 @@ export async function refreshSession(sessionId, refreshToken) {
     throw httpError(401, 'Access token expired');
   }
 
-  await Session.deleteOne({_id: session._id});
-
+  await Session.deleteOne({ _id: session._id });
 
   return Session.create({
     userId: session.userId,
@@ -73,4 +72,4 @@ export async function refreshSession(sessionId, refreshToken) {
     accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
     refreshTokenValidUntil: new Date(Date.now() + 720 * 60 * 60 * 1000),
   });
-};
+}

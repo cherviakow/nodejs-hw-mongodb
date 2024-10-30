@@ -6,11 +6,7 @@ export function isValidID(req, res, next) {
 
     if(isValidObjectId(id) !== true){
         return next(httpErrors(400, 'ID is not valid'));
-
     }
-
-
-    console.log(id);
 
     next();
 };

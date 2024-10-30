@@ -19,11 +19,10 @@ export async function getContactsController(req, res) {
     perPage,
     sortBy,
     sortOrder,
+    userId: req.user.id,
   });
 
-  res.json(
-    data,
-  );
+  res.json(data);
 
   // res.status(200).json({
   //   status: 200,
@@ -40,6 +39,7 @@ export async function getContactController(req, res, next) {
   if (!contact) {
     throw httpErrors(404, 'Contact not found');
   }
+
   res.status(200).json({
     status: 200,
     message: `Successfully found contact with id ${id}!`,
@@ -54,6 +54,7 @@ export async function createContactController(req, res) {
     email: req.body.email,
     isFavourite: req.body.isFavourite,
     contactType: req.body.contactType,
+    userId: req.user.id,
   };
 
   const result = await createContact(contact);
@@ -111,9 +112,7 @@ export async function changeContactTypeController(req, res) {
     throw httpErrors(404, 'Contact not found');
   }
 
-  res.json(
-    result,
-  );
+  res.json(result);
 
   // res.status(200).json({
   //   status: 200,

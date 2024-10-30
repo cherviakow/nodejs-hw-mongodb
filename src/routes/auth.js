@@ -9,6 +9,8 @@ import {
 import { validateBody } from '../middlewares/validateBody.js';
 import { registerSchema, loginSchema } from '../validation/auth.js';
 
+
+
 const authRoutes = express.Router();
 const jsonParser = express.json();
 
