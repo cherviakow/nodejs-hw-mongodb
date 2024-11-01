@@ -1,20 +1,39 @@
+import createHttpError from 'http-errors';
 import { Contact } from '../models/contact.js';
 
 export const getAllContacts = async ({
+  userId,
   page,
   perPage,
   sortBy,
   sortOrder,
-  userId,
+  filter={}
 }) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
-  const contactQuery = Contact.find();
-  contactQuery.where('userId').equals(userId);
+  // const contactQuery = Contact.find();
+  // contactQuery.where('userId').equals(userId);
+
+
+  const query = { userId};
+  if(!userId){
+    throw createHttpError(400, 'invalid ID');
+  }
+
+  if (filter.contactType) {
+    query.contactType = filter.contactType;
+  }
+
+  if (filter.isFavourite !== undefined) {
+    query.isFavourite = filter.isFavourite;
+  }
+
+
+
 
   const [total, data] = await Promise.all([
-    Contact.countDocuments(),
-    Contact.find()
+    Contact.countDocuments(query),
+    Contact.find(query)
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(perPage),
@@ -33,22 +52,23 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = async (id, userId) => {
-  return await Contact.findById({_id: id, userId});
+
+export function getContactById (id, userId){
+  return Contact.findOne({_id: id, userId});
 };
 
 export function createContact(contact, userId) {
-  return Contact.create({_id: contact, userId});
+  return Contact.create({...contact, userId});
 }
 
 export function deleteContact(id, userId) {
-  return Contact.findByIdAndDelete(id, userId);
+  return Contact.findOneAndDelete({_id: id, userId});
 }
 
-export function updateContact(id, contact, userId) {
-  return Contact.findByIdAndUpdate(id, contact, userId);
-}
+export function updateContact(id, contact) {
+  return Contact.findByIdAndUpdate(id, contact);
+ }
 
-export function changeContactType(id, newContact, userId) {
-  return Contact.findByIdAndUpdate(id, newContact, userId, { new: true });
+export function changeContactType(id, newContact) {
+  return Contact.findByIdAndUpdate({_id: id}, newContact, { new: true });
 }

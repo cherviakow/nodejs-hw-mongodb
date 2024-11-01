@@ -27,7 +27,7 @@ export async function authenticate(req, res, next) {
 
   const user = await User.findById(session.userId);
 
-  if (user === null){
+  if (user === null) {
     return next(createHttpError(401, 'Session not found'));
   }
 
