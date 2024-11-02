@@ -10,12 +10,9 @@ import httpErrors from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 
-
 export async function getContactsController(req, res) {
-
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
-  // const userId = req.user.id;
 
   const data = await getAllContacts({
     page,
@@ -30,7 +27,6 @@ export async function getContactsController(req, res) {
 
 export async function getContactController(req, res, next) {
   const { id } = req.params;
-
 
   const contact = await getContactById(id, req.user._id);
 
@@ -111,10 +107,4 @@ export async function changeContactTypeController(req, res) {
   }
 
   res.json(result);
-
-  // res.status(200).json({
-  //   status: 200,
-  //   message: `Successfully patched a contact!`,
-  //   data: result,
-  // });
 }
