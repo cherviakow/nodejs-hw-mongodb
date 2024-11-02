@@ -47,8 +47,8 @@ export function deleteContact(id, userId) {
   return Contact.findOneAndDelete({ _id: id, userId });
 }
 
-export function updateContact(id, contact) {
-  return Contact.findByIdAndUpdate(id, contact);
+export function updateContact(id, contact, userId) {
+  return Contact.findByIdAndUpdate({_id: id, userId}, contact);
 }
 
 export function changeContactType(id, newContact) {
