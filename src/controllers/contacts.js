@@ -9,6 +9,7 @@ import {
 import httpErrors from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import mongoose from 'mongoose';
 
 export async function getContactsController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -100,11 +101,19 @@ export async function updateContactController(req, res) {
 export async function changeContactTypeController(req, res) {
   const { id } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw httpErrors(400, 'Invalid contact Id');
+  }
+
   const result = await changeContactType(id, req.body, req.user._id);
 
   if (!result) {
     throw httpErrors(404, 'Contact not found');
   }
 
-  res.json(result);
+  res.json({
+    status: 200,
+    message: 'Successfuly patched a contact',
+    data: result,
+  });
 }
