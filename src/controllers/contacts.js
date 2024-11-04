@@ -42,7 +42,28 @@ export async function getContactController(req, res, next) {
   });
 }
 
-export async function createContactController(req, res) {
+// export async function createContactController(req, res) {
+//   const contact = {
+//     name: req.body.name,
+//     phoneNumber: req.body.phoneNumber,
+//     email: req.body.email,
+//     isFavourite: req.body.isFavourite,
+//     contactType: req.body.contactType,
+//     userId: req.user.id,
+//   };
+
+//   // const result = await createContact(contact);
+
+//   const result = await createContact({...req.body, userId: req.user._id, contact},contact);
+
+//   res.status(201).json({
+//     status: 201,
+//     message: 'Successfully created a contact!',
+//     data: result,
+//   });
+// }
+
+export async function createContactController(req, res, next) {
   const contact = {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
@@ -51,14 +72,18 @@ export async function createContactController(req, res) {
     contactType: req.body.contactType,
     userId: req.user.id,
   };
-
-  const result = await createContact(contact);
-
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully created a contact!',
-    data: result,
-  });
+  const userId = req.user._id;
+  try {
+    const newContact = await createContact(contact, userId);
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: newContact,
+    });
+  } catch (error) {
+    httpErrors(error);
+    next({ status: 500, message: 'Something wrong!!!' });
+  }
 }
 
 export async function deleteContactController(req, res) {
@@ -100,12 +125,13 @@ export async function updateContactController(req, res) {
 
 export async function changeContactTypeController(req, res) {
   const { id } = req.params;
+  const userId = req.user._id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw httpErrors(400, 'Invalid contact Id');
   }
 
-  const result = await changeContactType(id, req.body, req.user._id);
+  const result = await changeContactType(id, req.body, userId);
 
   if (!result) {
     throw httpErrors(404, 'Contact not found');

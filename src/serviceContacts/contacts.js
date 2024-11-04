@@ -39,18 +39,29 @@ export function getContactById(id, userId) {
   return Contact.findOne({ _id: id, userId });
 }
 
-export function createContact(contact, userId) {
-  return Contact.create({ ...contact, userId });
+
+
+
+export function createContact(contact){
+  return Contact.create(contact);
 }
+
+// export function createContact(contact, userId) {
+// return Contact.create({ ...contact, userId });
+// }
 
 export function deleteContact(id, userId) {
   return Contact.findOneAndDelete({ _id: id, userId });
 }
 
 export function updateContact(id, contact, userId) {
-  return Contact.findByIdAndUpdate({_id: id, userId}, contact);
+  return Contact.findOneAndUpdate({_id: id, userId}, contact);
 }
 
-export function changeContactType(id, newContact) {
-  return Contact.findByIdAndUpdate({ _id: id }, newContact, { new: true });
+// export function changeContactType(id, userId, contact) {
+//   return Contact.findOneAndUpdate({ _id: id }, userId, contact, { new: true });
+// }
+
+export function changeContactType(id, userId, contact) {
+  return Contact.findOneAndUpdate({ _id: id }, userId, contact, { new: true });
 }
