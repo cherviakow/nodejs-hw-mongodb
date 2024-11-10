@@ -2,6 +2,12 @@
 node_modules
 node_modules/
 
+src/tmp/*
+!src/tmp/.gitkeep
+src/public/photos/*
+!src/public/photos/.gitkeep
+
+
 
 
 .env

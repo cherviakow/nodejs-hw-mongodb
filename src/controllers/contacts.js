@@ -1,3 +1,6 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+
 import {
   getAllContacts,
   getContactById,
@@ -9,6 +12,7 @@ import {
 import httpErrors from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
 import mongoose from 'mongoose';
 
 export async function getContactsController(req, res) {
@@ -43,6 +47,22 @@ export async function getContactController(req, res, next) {
 }
 
 export async function createContactController(req, res, next) {
+  let photo = null;
+
+  if (typeof req.file !== 'undefined') {
+    if (process.env.ENABLE_CLOUDINARY === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      console.log(result);
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'public/photos', req.file.filename),
+      );
+
+      photo = `http://localhost:3000/photos/${req.file.filename}`;
+    }
+  }
+
   const contact = {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
@@ -50,6 +70,7 @@ export async function createContactController(req, res, next) {
     isFavourite: req.body.isFavourite,
     contactType: req.body.contactType,
     userId: req.user.id,
+    photo,
   };
   const userId = req.user._id;
   try {

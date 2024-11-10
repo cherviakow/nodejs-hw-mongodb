@@ -1,9 +1,16 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import httpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
+import jwt from 'jsonwebtoken';
+import handlebars from 'handlebars';
 
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
+import { sendMail } from '../utils/sendMail.js';
+
+const RESET_PASSWORD_TEMPLATE = fs.readFileSync(path.resolve('src/templates/reset-password.hbs'), {encoding: 'utf-8'});
 
 export async function registerUser(payload) {
   const user = await User.findOne({ email: payload.email });
@@ -72,4 +79,57 @@ export async function refreshSession(sessionId, refreshToken) {
     accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
     refreshTokenValidUntil: new Date(Date.now() + 720 * 60 * 60 * 1000),
   });
+}
+
+export async function requestResetPassword(email) {
+  const user = await User.findOne({ email: email });
+
+  if (user === null) {
+    throw httpError(404, 'User not found');
+  }
+
+  const resetToken = jwt.sign(
+    { sub: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '5min' },
+  );
+
+  const html = handlebars.compile(RESET_PASSWORD_TEMPLATE);
+
+  try {
+    sendMail({
+      from: 'cherviakov.canada@gmail.com',
+      to: email,
+      subject: 'Reset your password',
+      html: html({resetToken}),
+    });
+  } catch (error) {
+    console.log(error);
+
+    throw httpError(404, 'User not found');
+  }
+}
+
+export async function resetPassword(password, token) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({ _id: decoded.sub, email: decoded.email });
+
+    const hasedPassword = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(user._id, { password: hasedPassword });
+
+    if (user === null) {
+      throw httpError(404, 'User not found');
+    }
+  } catch (error) {
+    if (
+      error.name === 'JsonWebTokenError' ||
+      error.name === 'TokenExpiredError'
+    ) {
+      throw httpError(400, 'Token is expired or invalid.');
+    }
+
+    throw error;
+  }
 }
