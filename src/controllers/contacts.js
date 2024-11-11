@@ -52,12 +52,13 @@ export async function createContactController(req, res, next) {
   if (typeof req.file !== 'undefined') {
     if (process.env.ENABLE_CLOUDINARY === 'true') {
       const result = await uploadToCloudinary(req.file.path);
-      console.log(result);
+      await fs.unlink(req.file.path);
+
+
+    photo = result.secure_url;
+
     } else {
-      await fs.rename(
-        req.file.path,
-        path.resolve('src', 'public/photos', req.file.filename),
-      );
+      await fs.rename(req.file.path, path.resolve('src', 'public/photos', req.file.filename),);
 
       photo = `http://localhost:3000/photos/${req.file.filename}`;
     }
@@ -123,23 +124,81 @@ export async function updateContactController(req, res) {
   });
 }
 
+
 export async function changeContactTypeController(req, res) {
   const { id } = req.params;
   const userId = req.user._id;
+  let photo = null;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw httpErrors(400, 'Invalid contact Id');
+
+  const contact = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    isFavourite: req.body.isFavourite,
+    contactType: req.body.contactType,
+    userId: req.user.id,
+    photo,
+  };
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+             throw httpErrors(400, 'Invalid contact Id');
+           }
+
+
+  if (req.file) {
+    if (process.env.ENABLE_CLOUDINARY === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      await fs.unlink(req.file.path);
+      photo = result.secure_url;
+    } else {
+      await fs.rename(
+        req.file.path,
+        path.resolve('src', 'public/photos', req.file.filename),
+      );
+      photo = `http://localhost:3000/photos/${req.file.filename}`;
+    }
   }
 
-  const result = await changeContactType(id, req.body, userId);
+  const updatedData = {contact };
+  if (photo) {
+    updatedData.photo = photo;
+  }
+
+  console.log(updatedData);
+
+
+  const result = await changeContactType(id, contact, userId);
 
   if (!result) {
     throw httpErrors(404, 'Contact not found');
   }
 
-  res.json({
+  res.status(200).json({
     status: 200,
-    message: 'Successfuly patched a contact',
+    message: `Successfully patched a contact!`,
     data: result,
   });
-}
+
+};
+
+// export async function changeContactTypeController(req, res) {
+//   const { id } = req.params;
+//   const userId = req.user._id;
+
+//   if (!mongoose.Types.ObjectId.isValid(id)) {
+//     throw httpErrors(400, 'Invalid contact Id');
+//   }
+
+//   const result = await changeContactType(id, req.body, userId);
+
+//   if (!result) {
+//     throw httpErrors(404, 'Contact not found');
+//   }
+
+//   res.json({
+//     status: 200,
+//     message: 'Successfuly patched a contact',
+//     data: result,
+//   });
+// }

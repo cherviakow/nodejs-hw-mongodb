@@ -28,7 +28,7 @@ router.post('/contacts', upload.single('photo'), authenticate, jsonParser, valid
 
 router.put('/contacts/:id', authenticate, isValidID, jsonParser, ctrlWrapper(updateContactController));
 
-router.patch('/contacts/:id', authenticate, isValidID, jsonParser, validateBody(patchContactShema), ctrlWrapper(changeContactTypeController));
+router.patch('/contacts/:id', upload.single('photo'), authenticate, isValidID, jsonParser, validateBody(patchContactShema), ctrlWrapper(changeContactTypeController));
 
 router.delete('/contacts/:id', authenticate, isValidID, ctrlWrapper(deleteContactController));
 

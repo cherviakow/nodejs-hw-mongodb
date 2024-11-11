@@ -1,4 +1,7 @@
 import cloudinary from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 cloudinary.v2.config({
   secure: true,
