@@ -19,4 +19,5 @@ export const patchContactShema = Joi.object({
   email: Joi.string().min(3).max(20),
   isFavourite: Joi.boolean(),
   contactType: Joi.string().valid('work', 'home', 'personal'),
+  photo: Joi.string().optional(),
 });
