@@ -81,7 +81,7 @@ export async function refreshSession(sessionId, refreshToken) {
   });
 }
 
-export async function requestResetPassword(email) {
+export async function requestResetEmail(email) {
   const user = await User.findOne({ email: email });
 
   if (user === null) {
@@ -93,6 +93,8 @@ export async function requestResetPassword(email) {
     process.env.JWT_SECRET,
     { expiresIn: '5min' },
   );
+
+  console.log(resetToken);
 
   const html = handlebars.compile(RESET_PASSWORD_TEMPLATE);
 
@@ -118,6 +120,7 @@ export async function resetPassword(password, token) {
     const hasedPassword = await bcrypt.hash(password, 10);
 
     await User.findByIdAndUpdate(user._id, { password: hasedPassword });
+    await Session.deleteOne({ userId: user._id });
 
     if (user === null) {
       throw httpError(404, 'User not found');

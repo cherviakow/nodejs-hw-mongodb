@@ -18,7 +18,6 @@ import mongoose from 'mongoose';
 export async function getContactsController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
-
   const data = await getAllContacts({
     page,
     perPage,
@@ -30,7 +29,7 @@ export async function getContactsController(req, res) {
   res.json(data);
 }
 
-export async function getContactController(req, res, next) {
+export async function getContactController(req, res) {
   const { id } = req.params;
 
   const contact = await getContactById(id, req.user._id);

@@ -5,7 +5,7 @@ import {
   loginController,
   logoutController,
   refreshController,
-  resetEmailController,
+  requestResentEmailController,
   resetPasswordController,
 } from '../controllers/auth.js';
 import { validateBody } from '../middlewares/validateBody.js';
@@ -41,7 +41,7 @@ authRoutes.post(
   '/send-reset-email',
   jsonParser,
   validateBody(resetEmailSchema),
-  ctrlWrapper(resetEmailController),
+  ctrlWrapper(requestResentEmailController),
 );
 
 authRoutes.post(
