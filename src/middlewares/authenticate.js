@@ -61,7 +61,6 @@ import { User } from '../models/user.js';
 export async function authenticate (req, res, next) {
 const authHeader = req.headers.authorization;
 
-console.log(authHeader);
 
   if (!authHeader) {
     return next(createHttpError(401, 'Please provide access token!!'));

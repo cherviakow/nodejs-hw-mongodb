@@ -13,7 +13,7 @@ import httpErrors from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
-// import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 export async function getContactsController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -113,7 +113,7 @@ export async function updateContactController(req, res) {
   const result = await updateContact(id, contact, req.user._id);
 
   if (!result) {
-    throw httpErrors(404, 'Contact not found');
+    throw httpErrors(404, 'Contact not found!');
   }
 
   res.status(200).json({
@@ -129,9 +129,12 @@ export async function changeContactTypeController(req, res) {
   const userId = req.user._id;
   let photo = null;
 
-    // if (!mongoose.Types.ObjectId.isValid(id)) {
-    //          throw httpErrors(400, 'Invalid contact Id');
-    //        }
+  console.log(photo);
+
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+             throw httpErrors(400, 'Invalid contact Id');
+           }
 
 
     if (typeof req.file !== 'undefined') {
@@ -157,16 +160,11 @@ const contact = {
       userId: req.user.id,
       photo,
     };
-  // const updatedData = {...req.body };
-  // if (photo) {
-  //   req.body.photo = photo;
-  // }
-
-  // console.log(updatedData);
-
 
   const result = await changeContactType(id, userId, contact);
-console.log(result);
+
+
+
 
   if (!result) {
     throw httpErrors(404, 'Contact not found');
@@ -203,4 +201,3 @@ console.log(result);
 //     data: result,
 //   });
 // };
-
