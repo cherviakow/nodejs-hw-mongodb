@@ -63,7 +63,7 @@ const authHeader = req.headers.authorization;
 
 console.log(authHeader);
 
-  if (authHeader !== 'string') {
+  if (!authHeader) {
     return next(createHttpError(401, 'Please provide access token!!'));
   }
 
@@ -73,13 +73,13 @@ const accessToken = authHeader.split(' ')[1];
 
 
 
-  if (bearer !== 'Bearer' || accessToken !== 'string') {
+  if (bearer !== 'Bearer' || !accessToken) {
     return next(createHttpError(401, 'Please provide access token'));
   }
 
   const session = await Session.findOne({accessToken: accessToken });
 
-  if (session === null) {
+  if (!session) {
     return next(createHttpError(401, 'Session not found'));
   }
 
@@ -89,7 +89,7 @@ const accessToken = authHeader.split(' ')[1];
 
   const user = await User.findById(session.userId);
 
-  if (user === null) {
+  if (!user) {
     return next(createHttpError(401, 'Session not found'));
   }
 
