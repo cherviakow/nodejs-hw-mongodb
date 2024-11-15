@@ -57,16 +57,11 @@ import createHttpError from 'http-errors';
 import { Session } from '../models/session.js';
 import { User } from '../models/user.js';
 
-// export async function authenticate(req, res, next) {
-//   const { authorization } = req.headers;
 
 export async function authenticate (req, res, next) {
-const authHeader = req.headers;
+const authHeader = req.headers.authorization;
 
 console.log(authHeader);
-
-
-
 
   if (authHeader !== 'string') {
     return next(createHttpError(401, 'Please provide access token!!'));
@@ -82,7 +77,7 @@ const accessToken = authHeader.split(' ')[1];
     return next(createHttpError(401, 'Please provide access token'));
   }
 
-  const session = await Session.findOne({accessToken });
+  const session = await Session.findOne({accessToken: accessToken });
 
   if (session === null) {
     return next(createHttpError(401, 'Session not found'));
@@ -101,8 +96,6 @@ const accessToken = authHeader.split(' ')[1];
 
   // req.user = {id: user._id, name: user.name};
   req.user = user;
-
-
 
   next();
 }
