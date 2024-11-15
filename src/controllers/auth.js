@@ -3,7 +3,6 @@ import {
   loginUser,
   logoutUser,
   refreshSession,
-  // requestResetPassword,
   requestResetEmail,
   resetPassword,
 } from '../serviceContacts/auth.js';
