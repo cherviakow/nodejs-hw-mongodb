@@ -1,0 +1,14 @@
+tags:
+  - Contacts
+summery: Get contact by id
+operationId: getContact
+description: 'Get contact by id'
+security:
+  - bearerAuth: []
+parametrs:
+  - in: path
+name: id
+required: true
+schema:
+type: string
+example: 
