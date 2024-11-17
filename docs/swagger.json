@@ -25,7 +25,31 @@
       "name": "Auth"
     }
   ],
-  "paths": null,
+  "paths": {
+    "/contacts/{id}": null,
+    "get": null,
+    "tags": [
+      "Contacts"
+    ],
+    "summery": "Get contact by id",
+    "operationId": "getContact",
+    "description": "Get contact by id",
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "parametrs": [
+      {
+        "in": "path"
+      }
+    ],
+    "name": "id",
+    "required": true,
+    "schema": null,
+    "type": "string",
+    "example": null
+  },
   "components": {
     "securitySchemes": {
       "bearerAuth": {

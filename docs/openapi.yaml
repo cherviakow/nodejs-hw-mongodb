@@ -14,13 +14,13 @@ tags:
   - name: Auth
 
 servers:
-  - url: http://localhost:3000
-  - url: #посилання на задеплоєний сайт
+  # url: http://localhost:3000
+  url: https://hw6-email-and-images-m7ps.onrender.com
+
 paths:
-  # тут будуть посилання на ендпоінти
   /contacts/{id}:
   get:
-  $ref: ../swagger/paths/contacts/{id}/get.yaml
+  $ref: '../swagger/paths/contacts/{id}/get.yaml'
 
 
 
