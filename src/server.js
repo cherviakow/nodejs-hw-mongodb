@@ -5,12 +5,14 @@ import dotenv from 'dotenv';
 import contactRoutes from './routes/contacts.js';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
+// import swaggerUi from 'swagger-ui-express';
 import { env } from './utils/.env.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 
 import authRoutes from './routes/auth.js';
+import {swaggerDocs} from './middlewares/swaggerDocs.js';
 
 dotenv.config();
 
@@ -18,6 +20,9 @@ export async function setupServer() {
   const app = express();
   const PORT = Number(env('PORT', '3000'));
   //   app.use(express.json());
+
+  // app.use('/api-docs', swaggerUi.serve);
+  app.use('/api-docs', swaggerDocs());
 
   app.use('/photos', express.static(path.resolve('src', 'public/photos')));
   app.use(cookieParser());
