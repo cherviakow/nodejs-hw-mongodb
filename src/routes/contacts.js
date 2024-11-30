@@ -7,19 +7,27 @@ import {
   createContactController,
   deleteContactController,
   changeContactTypeController,
+  updateContactController,
 } from '../controllers/contacts.js';
+import { isValidID } from '../middlewares/isValidID.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { contactShema } from '../validation/contact.js';
+
 
 const jsonParser = express.json();
 
 
 router.get('/contacts', ctrlWrapper(getContactsController));
 
-router.get('/contacts/:contactId', ctrlWrapper(getContactController));
+router.get('/contacts/:id', isValidID, ctrlWrapper(getContactController));
 
-router.post('/contacts', jsonParser, ctrlWrapper(createContactController));
+router.post('/contacts', jsonParser, validateBody(contactShema), ctrlWrapper(createContactController));
 
-router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
+router.put('/contacts/:id', isValidID, jsonParser, ctrlWrapper(updateContactController));
 
-router.patch('/contacts/:contactId', jsonParser, ctrlWrapper(changeContactTypeController));
+router.patch('/contacts/:id', isValidID, jsonParser, ctrlWrapper(changeContactTypeController));
+
+router.delete('/contacts/:id', isValidID, ctrlWrapper(deleteContactController));
+
 
 export default router;
